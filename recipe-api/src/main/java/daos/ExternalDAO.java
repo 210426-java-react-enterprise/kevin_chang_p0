@@ -1,22 +1,23 @@
-package recipes;
+package daos;
 
 import java.io.BufferedReader;
-//import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
+
+import recipes.Recipe;
+import recipes.StringifyParameters;
+import util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-//import java.util.stream.Collectors;
 
 import org.json.JSONObject;
 import org.json.JSONArray;
 
-public class Edamam {
+public class ExternalDAO {
 	
 	private static HttpURLConnection connection;
 	private static String JSONString = "";
@@ -113,15 +114,16 @@ public class Edamam {
 		JSONArray arr = obj.getJSONArray("hits");
 		
 		//Parse out API's Recipe object and convert to recipe-api's Recipe object
-		ArrayList<Recipe> arr2 = new ArrayList<Recipe>();
+		ArrayList<Recipe> arr2 = new ArrayList<>();
+
 		// arr = [{att1, att2, recipe: {url, name}}...]
 		for(int i = 0; i < arr.length() ; i++) {
 			JSONObject recipe = arr.getJSONObject(i).getJSONObject("recipe");
-			
-			//Puts all Recipe data into an ArrayList of Recipe objects
-			arr2.add(new Recipe(recipe.get("url").toString(), recipe.get("label").toString()));
+
+			//Puts all Recipe data into an ArrayList of Recipe object
+			arr2.add(new Recipe(recipe.get("url").toString(),
+					recipe.get("label").toString()));
 		}
-//		System.out.print(arr2);
 		
 		//Sets value of static ArrayList<Recipe> variable for Class access
 		recipeArray = arr2;

@@ -1,6 +1,7 @@
 package recipes;
 
-import java.util.ArrayList;
+import daos.ExternalDAO;
+import util.ArrayList;
 
 public class Driver {
     public static void main(String[] args) {
@@ -15,7 +16,8 @@ public class Driver {
         System.out.println(ing.getIngredients());
         System.out.println(ing.concatIng());
 
-        ArrayList<Recipe> afk = Edamam.getRecipe(ing.concatIng());
-        System.out.println(afk);
+        ArrayList<Recipe> afk = ExternalDAO.getRecipe(ing.concatIng());
+        System.out.println(afk.size());
+        System.out.println(afk.get(1));
     }
 }

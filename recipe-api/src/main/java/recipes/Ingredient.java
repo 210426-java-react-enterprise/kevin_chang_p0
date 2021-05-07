@@ -1,6 +1,6 @@
 package recipes;
 
-import java.util.ArrayList;
+import util.ArrayList;
 
 public class Ingredient {
 	private static ArrayList<String> ing;

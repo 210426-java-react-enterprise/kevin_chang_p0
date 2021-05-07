@@ -1,7 +1,6 @@
 package recipes;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
+import util.ArrayList;
 import java.util.Queue;
 //This class is the Recipe class which will instantiate Recipe object references
 //
@@ -27,5 +26,10 @@ public class Recipe {
 	}
 	
 	//potential toString() method
-	
+
+
+	@Override
+	public String toString() {
+		return name + " " + link;
+	}
 }

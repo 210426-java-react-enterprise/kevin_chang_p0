@@ -44,10 +44,15 @@ public class ArrayListTest {
     public void test_ArrayListAddRecipe(){
         //Arrange
         ArrayList<Recipe> recipeSut = new ArrayList<>();
-        Recipe recipe =
+        Recipe recipe = new Recipe("testname", "testlink.com");
+        String expectedString = "testname testlink.com";
+
         //Act
+        recipeSut.add(recipe);
 
         //Assert
+        System.out.println("Recipe data: " + recipe.toString());
+        Assert.assertEquals(expectedString, recipe.toString());
 
     }
 

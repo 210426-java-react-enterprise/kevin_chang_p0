@@ -10,17 +10,17 @@ public class ArrayList<T> implements List<T>{
     /**
      * Empty array at Class scope
      */
-    private static Object[] storageArray;
+    private Object[] storageArray;
     /**
      * ArrayList Size of what data is actually present
      */
-    private static int size;
+    private int size;
 
     /**
      * Current size of Index that would need to be expanded
      * This value is the actual data spaces allocated for the ArrayList, abstracted value
      */
-    private static int REAL_SIZE;
+    private int REAL_SIZE;
 
     /**
      * ArrayList constructor with initial capacity provided
@@ -68,9 +68,9 @@ public class ArrayList<T> implements List<T>{
      * Doubles the size of the storage array when it reaches 70% capacity
      * Copies over data
      */
-    private static void doubleStorageArray(){
+    private void doubleStorageArray(){
         Object[] tempStorageArray = new Object[REAL_SIZE*2];
-        for (int i = 0; i < storageArray.length; i++) {
+        for (int i = 0; i < this.storageArray.length; i++) {
             if(storageArray[i] != null){
                 tempStorageArray[i] = storageArray[i];
             }
