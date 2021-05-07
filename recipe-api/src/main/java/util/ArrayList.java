@@ -64,6 +64,7 @@ public class ArrayList<T> implements List<T>{
 
     }
 
+
     /**
      * Doubles the size of the storage array when it reaches 70% capacity
      * Copies over data

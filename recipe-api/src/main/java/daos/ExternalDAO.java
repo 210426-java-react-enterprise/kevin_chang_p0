@@ -9,10 +9,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import recipes.Recipe;
-import recipes.StringifyParameters;
 import util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+
+import java.net.URLEncoder;
 
 import org.json.JSONObject;
 import org.json.JSONArray;
@@ -22,25 +21,32 @@ public class ExternalDAO {
 	private static HttpURLConnection connection;
 	private static String JSONString = "";
 	private static ArrayList<Recipe> recipeArray;
-	
-	public static ArrayList<Recipe> getRecipe(String q) {
-		//GET request URL parameters
-		Map<String, String> parameters = new HashMap<>();
-		
-		//ingredient parameters
-		parameters.put("q", q);
-		
-		//necessary parameters for Edamam
-		parameters.put("app_id", "cf6cdd39");
-		parameters.put("app_key", "3b7b32c4423d117221766aec8e28e20f");
-		
-		
-		//Setup URL
-		String outputStream;
+
+	//makes the inputted data into a readable URL to be passed in the GET request
+	//q is the concatenated Strings of ingredients being searched for
+	public static String getOutputStream(String q, String app_id, String app_key) throws UnsupportedEncodingException{
+		StringBuilder str = new StringBuilder();
+			str.append(URLEncoder.encode("q", "UTF-8"));
+			str.append("=");
+			str.append(URLEncoder.encode(q, "UTF-8"));
+			str.append("&");
+			str.append(URLEncoder.encode("app_id", "UTF-8"));
+			str.append("=");
+			str.append(URLEncoder.encode(app_id, "UTF-8"));
+			str.append("&");
+			str.append(URLEncoder.encode("app_key", "UTF-8"));
+			str.append("=");
+			str.append(URLEncoder.encode(app_key, "UTF-8"));
+			str.append("&");
+
+		String strResult = str.toString();
+		return strResult;
+	}
+
+	public static ArrayList<Recipe> getRecipe(String outputStream) {
+
+		//Setting up the URL connection
 		try {
-			//Creates a String from parameters to add to JSON
-			outputStream = StringifyParameters.stringifyParameters(parameters);
-			
 			//Adds outputStream JSON parameters to search URL and opens connection object
 			URL url = new URL("https://api.edamam.com/search?" + outputStream);
 			connection = (HttpURLConnection)url.openConnection();
@@ -73,8 +79,8 @@ public class ExternalDAO {
 		
 		return recipeArray;
 	}
-	
-	
+
+
 	
 	private static void read() {
 		
@@ -121,8 +127,7 @@ public class ExternalDAO {
 			JSONObject recipe = arr.getJSONObject(i).getJSONObject("recipe");
 
 			//Puts all Recipe data into an ArrayList of Recipe object
-			arr2.add(new Recipe(recipe.get("url").toString(),
-					recipe.get("label").toString()));
+			arr2.add(new Recipe(recipe.get("label").toString(), recipe.get("url").toString()));
 		}
 		
 		//Sets value of static ArrayList<Recipe> variable for Class access

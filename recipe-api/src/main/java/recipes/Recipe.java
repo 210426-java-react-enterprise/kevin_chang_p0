@@ -9,27 +9,29 @@ public class Recipe {
 	private String name;
 	//private ArrayList<String> ingredients;
 	private String link;
-	
+
 	public Recipe(String name, String link) {
 		this.name = name;
 		//this.ingredients = ingredients;
 		this.link = link;
-		
+
 	}
-	
+
 	//Recipe constructor
 	public Recipe(String name, ArrayList<String> ingredients, Queue<String> instructions, String link) {
 		this.name = name;
 		//this.ingredients = ingredients;
 		this.link = link;
-		
+
 	}
-	
+
 	//potential toString() method
 
 
 	@Override
 	public String toString() {
-		return name + " " + link;
+		return "Recipe " + "\n" +
+				"	Name of Recipe: " + name + "\n" +
+				"	Link to Recipe: " +  link;
 	}
 }
