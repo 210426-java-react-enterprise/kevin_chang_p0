@@ -127,24 +127,4 @@ public class Edamam {
 		recipeArray = arr2;
 	} 
 
-
-	
-	public static void main(String[] args) {
-		Ingredient ing = new Ingredient();
-		ArrayList<String> arr = new ArrayList<String>();
-		arr.add("chicken");
-		arr.add("onion");
-		arr.add("potato");
-		
-		
-		ing.setIngredients(arr);
-		
-		System.out.println(ing.getIngredients());
-		System.out.println(ing.concatIng());
-		
-		ArrayList<Recipe> afk = getRecipe(ing.concatIng());
-		System.out.println(afk);
-		
-
-	}
 }
