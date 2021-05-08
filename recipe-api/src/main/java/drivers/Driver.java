@@ -1,12 +1,18 @@
-import daos.ExternalDAO;
-import recipes.Ingredient;
-import recipes.Recipe;
-import util.ArrayList;
+package drivers;
 
-import java.io.UnsupportedEncodingException;
+import util.AppState;
 
 public class Driver {
-    public static void main(String[] args) throws UnsupportedEncodingException {
+
+    private static AppState app = new AppState();
+
+    public static void main(String[] args) {
+        while (app.isAppRunning()) {
+            app.getRouter().navigate("/welcome");
+        }
+
+
+        /* Testing the API
         Ingredient ing = new Ingredient();
         ArrayList<String> arr = new ArrayList<String>();
         arr.add("chicken");
@@ -22,5 +28,17 @@ public class Driver {
         ArrayList<Recipe> afk = ExternalDAO.getRecipe(outputStream);
         System.out.println(afk.size());
         System.out.println(afk.get(1));
+
+        */
     }
+
+    public static AppState app() {
+        return app;
+    }
+
+
 }
+
+
+
+
