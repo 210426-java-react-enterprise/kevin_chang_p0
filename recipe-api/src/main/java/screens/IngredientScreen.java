@@ -63,6 +63,8 @@ public class IngredientScreen extends Screen {
                         int[] recipeIdArray = userDao.saveRecipes(recipeArray);
                         //TODO make sure when implementing these methods to also persist to recipe_ingredient_table
                         //Use the int[] arrays returned at this point to construct and persist to relational table
+
+
                     }
                 }
                 //implement in UserDAO a method for persisting recipeArray as well as ingredientsArray
