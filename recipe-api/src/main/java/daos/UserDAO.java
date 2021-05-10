@@ -5,7 +5,6 @@ import models.Recipe;
 import util.ArrayList;
 import util.ConnectionFactory;
 
-import java.io.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,11 +20,10 @@ public class UserDAO {
 
         try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
             String sqlInsertIngredient = "insert into ingredients ( ingredient ) values (?)";
-            PreparedStatement pstmt;
+            PreparedStatement pstmt = conn.prepareStatement(sqlInsertIngredient, new String[] { "ingredient_id" });;
 
             for (int i = 0; i < ingredientArray.size(); i++) {
                 if(!isIngredientDuplicate(ingredientArray.get(i))){
-                    pstmt = conn.prepareStatement(sqlInsertIngredient, new String[] { "ingredient_id" });
                     pstmt.setString(1, ingredientArray.get(i));
                     pstmt.executeUpdate();
                 }
@@ -42,6 +40,46 @@ public class UserDAO {
         return ingredientIDArray;
     }
 
+    public int getIngredientId(String ingredient){
+        int ingredient_id = 0;
+        try(Connection conn = ConnectionFactory.getInstance().getConnection()){
+            String sql = "select ingredient_id from ingredients where ingredient = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, ingredient);
+            ResultSet rs = pstmt.executeQuery();
+
+            if(rs.next()){
+                ingredient_id = rs.getInt("ingredient_id");
+            }
+
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+
+
+        return ingredient_id;
+    }
+
+    public boolean isIngredientDuplicate(String ingredient){
+
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+            String sqlQueryDuplicates = "select * from ingredients where ingredient = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sqlQueryDuplicates);
+            pstmt.setString(1, ingredient);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return true;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+
+    }
+
     //Returns an int[] array of recipe_id's of the recipes that were sent through the method
     public int[] saveRecipes(ArrayList<Recipe> recipeArray){
         //Stores the ingredient_id of every ingredient that has been added, or is duplicate, into this array
@@ -50,11 +88,10 @@ public class UserDAO {
 
         try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
             String sqlInsertRecipe = "insert into recipes ( recipe_name, recipe_url ) values (?, ?)";
-            PreparedStatement pstmt;
+            PreparedStatement pstmt = conn.prepareStatement(sqlInsertRecipe, new String[] { "recipe_id" });
 
             for (int i = 0; i < recipeArray.size(); i++) {
                 if(!isRecipeDuplicate(recipeArray.get(i).getName(), recipeArray.get(i).getUrl())){
-                    pstmt = conn.prepareStatement(sqlInsertRecipe, new String[] { "recipe_id" });
                     pstmt.setString(1, recipeArray.get(i).getName());
                     pstmt.setString(2, recipeArray.get(i).getUrl());
                     pstmt.executeUpdate();
@@ -114,32 +151,35 @@ public class UserDAO {
         return recipe_id;
     }
 
-    public int getIngredientId(String ingredient){
-        int ingredient_id = 0;
-        try(Connection conn = ConnectionFactory.getInstance().getConnection()){
-            String sql = "select ingredient_id from ingredients where ingredient = ?";
+    public void persistFKToRecipeIngredientTable(int[] recipeIdArray, int[] ingredientIdArray){
+        try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
+            String sql = "insert into recipe_ingredient_table (recipe_id, ingredient_id) values (?, ?)";
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, ingredient);
-            ResultSet rs = pstmt.executeQuery();
 
-            if(rs.next()){
-                ingredient_id = rs.getInt("ingredient_id");
+            for (int i = 0; i < recipeIdArray.length; i++) {
+                pstmt.setString(1, Integer.toString(recipeIdArray[i]));
+                for (int j = 0; j < ingredientIdArray.length; j++) {
+                    pstmt.setString(2, Integer.toString(ingredientIdArray[j]));
+
+                    //checks to ensure that the key is not already in the table
+                    if(!isRecipeIngredientKeyDuplicate(Integer.toString(recipeIdArray[i]), Integer.toString(ingredientIdArray[j]))) {
+                        pstmt.executeUpdate();
+                    }
+                }
             }
 
         }catch(SQLException e){
             e.printStackTrace();
         }
-
-
-        return ingredient_id;
     }
 
-    public boolean isIngredientDuplicate(String ingredient){
+    public boolean isRecipeIngredientKeyDuplicate(String recipe_id, String ingredient_id){
 
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
-            String sqlQueryDuplicates = "select * from ingredients where ingredient = ?";
+            String sqlQueryDuplicates = "select * from recipe_ingredient_table where recipe_id = ? and ingredient_id = ? ";
             PreparedStatement pstmt = conn.prepareStatement(sqlQueryDuplicates);
-            pstmt.setString(1, ingredient);
+            pstmt.setString(1, recipe_id);
+            pstmt.setString(2, ingredient_id);
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
@@ -184,7 +224,7 @@ public class UserDAO {
         return newUser;
     }
 
-    public boolean isUsernameAvailable(String username) {
+    public boolean  isUsernameAvailable(String username) {
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 
             String sql = "select * from users where username = ?";

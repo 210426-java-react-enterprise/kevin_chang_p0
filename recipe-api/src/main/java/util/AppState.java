@@ -29,7 +29,7 @@ public class AppState {
                 .addScreen(new LoginScreen(consoleReader, router))
                 .addScreen(new RegisterScreen(consoleReader, userService, router))
                 .addScreen(new DashboardScreen(consoleReader, router))
-                .addScreen(new IngredientScreen(consoleReader, userService, router, userDao))
+                .addScreen(new IngredientScreen(consoleReader, userService, router, userDao, externalDao))
                 .addScreen(new FavoritesScreen(consoleReader, router))
                 .addScreen(new RecipeScreen(consoleReader, userService, router));
         System.out.println("Application initialized!");

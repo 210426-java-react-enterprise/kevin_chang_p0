@@ -100,7 +100,6 @@ public class ArrayList<T> implements List<T>{
             if(val != null && val.equals(data)){
                 check = true;
             }
-
         }
         System.out.println("Data container checked.");
         return check;

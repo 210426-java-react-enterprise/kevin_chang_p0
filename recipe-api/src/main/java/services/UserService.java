@@ -8,8 +8,6 @@ import models.AppUser;
 import models.Recipe;
 import util.ArrayList;
 
-import java.io.UnsupportedEncodingException;
-
 public class UserService {
 
     private UserDAO userDao;
@@ -35,6 +33,7 @@ public class UserService {
             throw new ResourcePersistenceException("The provided email is already taken!");
         }
 
+        //TODO Check if the inputs are also VALID inputs
         return userDao.saveUser(newUser);
 
     }
@@ -51,14 +50,13 @@ public class UserService {
     }
 
     //called by IngredientScreen to take in ArrayList of ingredients and initiate search process
-    public ArrayList<Recipe> validateSearch(ArrayList<String> ingredientArray){
+    public boolean isIngredientValid(String ingredient){
 
-        //TODO Implement checks to make sure that there are proper Ingredient inputs in the ArrayList?
-        // Or maybe there is no need for this user service
-        // Currently missing means of persisting ingredients
-        // Right now all it does is return an ArrayList<Recipe> to the IngredientScreen
+        //TODO Implement checks to make sure that there are proper Ingredient inputs
+        ////This Service should not allow numbers other than 0
 
-        return externalDao.searchRecipe(ingredientArray);
+
+        return true;
     }
 
 }

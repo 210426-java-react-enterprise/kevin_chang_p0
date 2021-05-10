@@ -1,7 +1,5 @@
 package models;
 
-import util.ArrayList;
-import java.util.Queue;
 //This class is the Recipe class which will instantiate Recipe object references
 //
 public class Recipe {
