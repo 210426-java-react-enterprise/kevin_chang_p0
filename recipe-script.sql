@@ -1,9 +1,15 @@
+/*
+ * grant all privileges on all tables in schema recipeapi to swekevin;
+ * select current_user;
+ */
+
 show search_path;
 set search_path to recipeapi;
 drop table users cascade;
 drop table ingredients cascade;
 drop table recipes cascade;
 drop table user_favorite_recipes cascade;
+drop table recipe_ingredient_table cascade;
 
 CREATE TABLE users (
 	user_id serial NOT null constraint pk_user primary key,
@@ -26,11 +32,17 @@ CREATE TABLE recipes (
 CREATE table ingredients (
 	ingredient_id serial NOT NULL,
 	ingredient varchar(50) NOT NULL,
-	recipe_id int4 NOT NULL,
 	
 	CONSTRAINT ingredients_ingredient_key UNIQUE (ingredient),
-	CONSTRAINT pk_ingredients PRIMARY KEY (ingredient_id),
-	CONSTRAINT fk_ingredient_recipe_id FOREIGN KEY (recipe_id) REFERENCES recipes (recipe_id)
+	CONSTRAINT pk_ingredients PRIMARY KEY (ingredient_id)
+);
+
+CREATE TABLE recipe_ingredient_table (
+	recipe_id int4 NOT NULL,
+	ingredient_id int4 NOT NULL,
+	CONSTRAINT no_duplicate_recipe_ingredient_pair PRIMARY KEY (recipe_id, ingredient_id),
+	CONSTRAINT fk_ingredient_to_ingredient FOREIGN KEY (ingredient_id) REFERENCES ingredients(ingredient_id),
+	CONSTRAINT fk_recipe_to_recipe FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id)
 );
 
 
