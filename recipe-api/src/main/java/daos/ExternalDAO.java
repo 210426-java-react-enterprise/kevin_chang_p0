@@ -1,45 +1,79 @@
-package recipes;
+package daos;
 
 import java.io.BufferedReader;
-//import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-//import java.util.stream.Collectors;
+
+import models.Recipe;
+import util.ArrayList;
+
+import java.net.URLEncoder;
 
 import org.json.JSONObject;
 import org.json.JSONArray;
 
-public class Edamam {
+public class ExternalDAO {
 	
-	private static HttpURLConnection connection;
-	private static String JSONString = "";
-	private static ArrayList<Recipe> recipeArray;
-	
-	public static ArrayList<Recipe> getRecipe(String q) {
-		//GET request URL parameters
-		Map<String, String> parameters = new HashMap<>();
-		
-		//ingredient parameters
-		parameters.put("q", q);
-		
-		//necessary parameters for Edamam
-		parameters.put("app_id", "cf6cdd39");
-		parameters.put("app_key", "3b7b32c4423d117221766aec8e28e20f");
-		
-		
-		//Setup URL
-		String outputStream;
+	private HttpURLConnection connection;
+	private String JSONString = "";
+	private ArrayList<Recipe> recipeArray;
+
+	public ArrayList<Recipe> searchRecipe(ArrayList<String> ingredientArray){
+		String outputStream = "";
 		try {
-			//Creates a String from parameters to add to JSON
-			outputStream = StringifyParameters.stringifyParameters(parameters);
-			
+			outputStream = getOutputStream(concatIng(ingredientArray), "cf6cdd39", "3b7b32c4423d117221766aec8e28e20f");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+
+		return getRecipe(outputStream);
+
+	}
+
+	//Takes an ArrayList<String> input and concatenates them with "+" signs in between
+	public String concatIng(ArrayList<String> ing) {
+		if (ing.size() > 0) {
+			String result = ing.get(0);
+			for(int i = 1; i < ing.size(); i++) {
+				result = result + "+" + ing.get(i);
+			}
+
+			return result;
+		}
+		else {
+			return "";
+		}
+	}
+
+	//makes the inputted data into a readable URL to be passed in the GET request
+	//q is the concatenated Strings of ingredients being searched for
+	public String getOutputStream(String q, String app_id, String app_key) throws UnsupportedEncodingException{
+		StringBuilder str = new StringBuilder();
+			str.append(URLEncoder.encode("q", "UTF-8"));
+			str.append("=");
+			str.append(URLEncoder.encode(q, "UTF-8"));
+			str.append("&");
+			str.append(URLEncoder.encode("app_id", "UTF-8"));
+			str.append("=");
+			str.append(URLEncoder.encode(app_id, "UTF-8"));
+			str.append("&");
+			str.append(URLEncoder.encode("app_key", "UTF-8"));
+			str.append("=");
+			str.append(URLEncoder.encode(app_key, "UTF-8"));
+			str.append("&");
+
+		String strResult = str.toString();
+		return strResult;
+	}
+
+	public ArrayList<Recipe> getRecipe(String outputStream) {
+
+		//Setting up the URL connection
+		try {
 			//Adds outputStream JSON parameters to search URL and opens connection object
 			URL url = new URL("https://api.edamam.com/search?" + outputStream);
 			connection = (HttpURLConnection)url.openConnection();
@@ -72,10 +106,10 @@ public class Edamam {
 		
 		return recipeArray;
 	}
+
+
 	
-	
-	
-	private static void read() {
+	private void read() {
 		
 		//Response Reader - Reads the InputStream response from the API
 		BufferedReader br = null;
@@ -105,7 +139,7 @@ public class Edamam {
 
 	}
 	
-	private static void getJSONToRecipeArray() {
+	private void getJSONToRecipeArray() {
 		//instantiate JSONObject given JSONString
 		JSONObject obj = new JSONObject(JSONString);
 		
@@ -113,38 +147,18 @@ public class Edamam {
 		JSONArray arr = obj.getJSONArray("hits");
 		
 		//Parse out API's Recipe object and convert to recipe-api's Recipe object
-		ArrayList<Recipe> arr2 = new ArrayList<Recipe>();
+		ArrayList<Recipe> arr2 = new ArrayList<>();
+
 		// arr = [{att1, att2, recipe: {url, name}}...]
 		for(int i = 0; i < arr.length() ; i++) {
 			JSONObject recipe = arr.getJSONObject(i).getJSONObject("recipe");
-			
-			//Puts all Recipe data into an ArrayList of Recipe objects
-			arr2.add(new Recipe(recipe.get("url").toString(), recipe.get("label").toString()));
+
+			//Puts all Recipe data into an ArrayList of Recipe object
+			arr2.add(new Recipe(recipe.get("label").toString(), recipe.get("url").toString()));
 		}
-//		System.out.print(arr2);
 		
 		//Sets value of static ArrayList<Recipe> variable for Class access
 		recipeArray = arr2;
 	} 
 
-
-	
-	public static void main(String[] args) {
-		Ingredient ing = new Ingredient();
-		ArrayList<String> arr = new ArrayList<String>();
-		arr.add("chicken");
-		arr.add("onion");
-		arr.add("potato");
-		
-		
-		ing.setIngredients(arr);
-		
-		System.out.println(ing.getIngredients());
-		System.out.println(ing.concatIng());
-		
-		ArrayList<Recipe> afk = getRecipe(ing.concatIng());
-		System.out.println(afk);
-		
-
-	}
 }
