@@ -1,16 +1,24 @@
 package services;
 
+import daos.ExternalDAO;
 import daos.UserDAO;
 import exceptions.InvalidRequestException;
 import exceptions.ResourcePersistenceException;
 import models.AppUser;
+import models.Recipe;
+import util.ArrayList;
+
+import java.io.UnsupportedEncodingException;
 
 public class UserService {
 
     private UserDAO userDao;
+    private ExternalDAO externalDao;
 
-    public UserService(UserDAO userDao) {
+    public UserService(UserDAO userDao, ExternalDAO externalDao) {
+
         this.userDao = userDao;
+        this.externalDao = externalDao;
     }
 
     public AppUser register(AppUser newUser) throws InvalidRequestException, ResourcePersistenceException {
@@ -27,7 +35,7 @@ public class UserService {
             throw new ResourcePersistenceException("The provided email is already taken!");
         }
 
-        return userDao.save(newUser);
+        return userDao.saveUser(newUser);
 
     }
 
@@ -40,6 +48,17 @@ public class UserService {
         if (user.getLastName() == null || user.getLastName().trim().isEmpty() || user.getLastName().length() > 25) return false;
 
         return true;
+    }
+
+    //called by IngredientScreen to take in ArrayList of ingredients and initiate search process
+    public ArrayList<Recipe> validateSearch(ArrayList<String> ingredientArray){
+
+        //TODO Implement checks to make sure that there are proper Ingredient inputs in the ArrayList?
+        // Or maybe there is no need for this user service
+        // Currently missing means of persisting ingredients
+        // Right now all it does is return an ArrayList<Recipe> to the IngredientScreen
+
+        return externalDao.searchRecipe(ingredientArray);
     }
 
 }

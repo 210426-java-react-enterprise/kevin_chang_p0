@@ -1,9 +1,8 @@
 package util;
 
+import daos.ExternalDAO;
 import daos.UserDAO;
-import screens.LoginScreen;
-import screens.RegisterScreen;
-import screens.WelcomeScreen;
+import screens.*;
 import services.UserService;
 
 import java.io.BufferedReader;
@@ -22,13 +21,17 @@ public class AppState {
         consoleReader = new BufferedReader(new InputStreamReader(System.in));
 
         final UserDAO userDao = new UserDAO();
-        final UserService userService = new UserService(userDao);
+        final ExternalDAO externalDao = new ExternalDAO();
+        final UserService userService = new UserService(userDao, externalDao);
 
         router = new ScreenRouter();
         router.addScreen(new WelcomeScreen(consoleReader, router))
                 .addScreen(new LoginScreen(consoleReader, router))
-                .addScreen(new RegisterScreen(consoleReader, userService, router));
-
+                .addScreen(new RegisterScreen(consoleReader, userService, router))
+                .addScreen(new DashboardScreen(consoleReader, router))
+                .addScreen(new IngredientScreen(consoleReader, userService, router, userDao))
+                .addScreen(new FavoritesScreen(consoleReader, router))
+                .addScreen(new RecipeScreen(consoleReader, userService, router));
         System.out.println("Application initialized!");
     }
 

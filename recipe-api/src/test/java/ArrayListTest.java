@@ -1,6 +1,6 @@
 import org.junit.Assert;
 import org.junit.Test;
-import recipes.Recipe;
+import models.Recipe;
 import util.ArrayList;
 
 public class ArrayListTest {

@@ -8,7 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import recipes.Recipe;
+import models.Recipe;
 import util.ArrayList;
 
 import java.net.URLEncoder;
@@ -18,13 +18,40 @@ import org.json.JSONArray;
 
 public class ExternalDAO {
 	
-	private static HttpURLConnection connection;
-	private static String JSONString = "";
-	private static ArrayList<Recipe> recipeArray;
+	private HttpURLConnection connection;
+	private String JSONString = "";
+	private ArrayList<Recipe> recipeArray;
+
+	public ArrayList<Recipe> searchRecipe(ArrayList<String> ingredientArray){
+		String outputStream = "";
+		try {
+			outputStream = getOutputStream(concatIng(ingredientArray), "cf6cdd39", "3b7b32c4423d117221766aec8e28e20f");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+
+		return getRecipe(outputStream);
+
+	}
+
+	//Takes an ArrayList<String> input and concatenates them with "+" signs in between
+	public String concatIng(ArrayList<String> ing) {
+		if (ing.size() > 0) {
+			String result = ing.get(0);
+			for(int i = 1; i < ing.size(); i++) {
+				result = result + "+" + ing.get(i);
+			}
+
+			return result;
+		}
+		else {
+			return "";
+		}
+	}
 
 	//makes the inputted data into a readable URL to be passed in the GET request
 	//q is the concatenated Strings of ingredients being searched for
-	public static String getOutputStream(String q, String app_id, String app_key) throws UnsupportedEncodingException{
+	public String getOutputStream(String q, String app_id, String app_key) throws UnsupportedEncodingException{
 		StringBuilder str = new StringBuilder();
 			str.append(URLEncoder.encode("q", "UTF-8"));
 			str.append("=");
@@ -43,7 +70,7 @@ public class ExternalDAO {
 		return strResult;
 	}
 
-	public static ArrayList<Recipe> getRecipe(String outputStream) {
+	public ArrayList<Recipe> getRecipe(String outputStream) {
 
 		//Setting up the URL connection
 		try {
@@ -82,7 +109,7 @@ public class ExternalDAO {
 
 
 	
-	private static void read() {
+	private void read() {
 		
 		//Response Reader - Reads the InputStream response from the API
 		BufferedReader br = null;
@@ -112,7 +139,7 @@ public class ExternalDAO {
 
 	}
 	
-	private static void getJSONToRecipeArray() {
+	private void getJSONToRecipeArray() {
 		//instantiate JSONObject given JSONString
 		JSONObject obj = new JSONObject(JSONString);
 		
