@@ -31,33 +31,32 @@ public class IngredientScreen extends Screen {
     @Override
     public void render(){
         ArrayList<String> ingredientArray = new ArrayList<>();
-        String ingredient = "";
+        String ingredient = "placeholder";
         System.out.println("Input ingredient names one at a time!");
         System.out.println("Enter \'0\' when you are finished and are ready to begin searching for recipes.");
-        System.out.println("+--------------------------------------+");
+        System.out.println("+---------------------------------------------------------------------------------+");
 
+        //Keeps check on while loop until the system needs to exit
+        boolean check = true;
         try {
-            System.out.print("Please input an ingredient: ");
-            //trims out extra spaces of inputs and replaces spaces between ingredients with a '+'
-            ingredient = consoleReader.readLine().trim().replace(' ', '+');
-            while(!userService.isIngredientValid(ingredient)){
-                System.out.print("Please input another ingredient or type \'0\' to Finish: ");
+            while(check){
+                System.out.print("Please input an ingredient or type \'0\' to Finish: ");
+                //trims out extra spaces of inputs and replaces spaces between ingredients with a '+'
                 ingredient = consoleReader.readLine().trim().replace(' ', '+');
-            }
 
-            while(!ingredient.trim().equals("0") ){
-                do {
+                //adds to array only if the user did not enter 0
+                if(userService.isIngredientValid(ingredient) && !ingredient.trim().equals("0")){
                     ingredientArray.add(ingredient);
-
-                    //utilizes userService isIngredientValid to check input validity
-                    //If valid, it will stop asking for repeated input and move on
-                    while (!userService.isIngredientValid(ingredient)) {
-                        System.out.print("Please input another ingredient or type \'0\' to Exit: ");
-                        ingredient = consoleReader.readLine().trim().replace(' ', '+');
-                    }
                 }
-                while (!ingredient.trim().equals("0"));
+                else if (ingredient.trim().equals("0")){
+                    check = false;
+                }
+                else{
+                    System.out.println("Invalid input! Please try again.");
+                }
             }
+
+            //Prompting that the flow is continuing
             System.out.println("Saving ingredient data...");
 
             //returns user to Dashboard only if they enter 0 and have not put in anything into the array

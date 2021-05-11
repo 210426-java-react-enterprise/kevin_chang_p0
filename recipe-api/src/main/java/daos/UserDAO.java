@@ -133,7 +133,7 @@ public class UserDAO {
     public int getRecipeId(String name, String url){
         int recipe_id = 0;
         try(Connection conn = ConnectionFactory.getInstance().getConnection()){
-            String sql = "select ingredient_id from ingredients where recipe_name = ? and recipe_url = ?";
+            String sql = "select recipe_id from recipes where recipe_name = ? and recipe_url = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, name);
             pstmt.setString(2, url);
@@ -157,12 +157,12 @@ public class UserDAO {
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             for (int i = 0; i < recipeIdArray.length; i++) {
-                pstmt.setString(1, Integer.toString(recipeIdArray[i]));
+                pstmt.setInt(1, recipeIdArray[i]);
                 for (int j = 0; j < ingredientIdArray.length; j++) {
-                    pstmt.setString(2, Integer.toString(ingredientIdArray[j]));
+                    pstmt.setInt(2, ingredientIdArray[j]);
 
                     //checks to ensure that the key is not already in the table
-                    if(!isRecipeIngredientKeyDuplicate(Integer.toString(recipeIdArray[i]), Integer.toString(ingredientIdArray[j]))) {
+                    if(!isRecipeIngredientKeyDuplicate(recipeIdArray[i], ingredientIdArray[j])) {
                         pstmt.executeUpdate();
                     }
                 }
@@ -173,13 +173,13 @@ public class UserDAO {
         }
     }
 
-    public boolean isRecipeIngredientKeyDuplicate(String recipe_id, String ingredient_id){
+    public boolean isRecipeIngredientKeyDuplicate(int recipe_id, int ingredient_id){
 
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
             String sqlQueryDuplicates = "select * from recipe_ingredient_table where recipe_id = ? and ingredient_id = ? ";
             PreparedStatement pstmt = conn.prepareStatement(sqlQueryDuplicates);
-            pstmt.setString(1, recipe_id);
-            pstmt.setString(2, ingredient_id);
+            pstmt.setInt(1, recipe_id);
+            pstmt.setInt(2, ingredient_id);
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
@@ -277,7 +277,7 @@ public class UserDAO {
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 user = new AppUser();
-                user.setUser_id(rs.getInt("id"));
+                user.setUser_id(rs.getInt("user_id"));
                 user.setUsername(rs.getString("username"));
                 user.setPassword(rs.getString("password"));
                 user.setFirstName(rs.getString("first_name"));
