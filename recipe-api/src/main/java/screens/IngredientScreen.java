@@ -2,6 +2,7 @@ package screens;
 
 import daos.ExternalDAO;
 import daos.UserDAO;
+import drivers.Driver;
 import models.Recipe;
 import services.UserService;
 import util.ArrayList;
@@ -85,6 +86,9 @@ public class IngredientScreen extends Screen {
                     }
                 }
             System.out.println("All data has been saved. Recipe search complete!");
+
+           //Shut down the application
+            Driver.app().setAppRunning(false);
 
             } catch (IOException e) {
             e.printStackTrace();

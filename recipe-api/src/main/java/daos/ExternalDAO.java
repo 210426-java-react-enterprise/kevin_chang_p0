@@ -114,6 +114,7 @@ public class ExternalDAO {
 		//Response Reader - Reads the InputStream response from the API
 		BufferedReader br = null;
 		try {
+			//If response code is 200, then connection is good and we can proceed
 			if (connection.getResponseCode() == 200) {
 			    br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 			    String strCurrentLine;
@@ -122,6 +123,7 @@ public class ExternalDAO {
 			            JSONString = JSONString + strCurrentLine;    
 			        }
 			} else {
+				//gets the error stream if the response code is not 200
 			    br = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
 			    String strCurrentLine;
 			        while ((strCurrentLine = br.readLine()) != null) {
