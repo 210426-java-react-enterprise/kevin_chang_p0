@@ -97,6 +97,7 @@ public class UserDAO {
                     pstmt.executeUpdate();
                 }
 
+                //gets the recipe_id from database so it can be stored
                 recipeIDArray[i] = getRecipeId(recipeArray.get(i).getName(), recipeArray.get(i).getUrl());
             }
 

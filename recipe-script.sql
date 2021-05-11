@@ -37,11 +37,23 @@ select * from ingredients;
 select * from recipes;
 select * from recipe_ingredient_table;
 
-
+/*
 delete from users;
 delete from ingredients;
 delete from recipes;
 delete from recipe_ingredient_table;
+*/
+
+alter sequence ingredients_ingredient_id_seq restart with 1;
+alter sequence recipes_recipe_id_seq restart with 1;
+alter sequence users_user_id_seq restart with 1;
+
+
+select recipes.recipe_name, recipes.recipe_url, ingredients.ingredient from recipes 
+inner join recipe_ingredient_table rit on recipes.recipe_id = rit.recipe_id
+inner join ingredients on  rit.ingredient_id = ingredients.ingredient_id;
+	
+
 
 
 delete from users where first_name = 'Administrator';
