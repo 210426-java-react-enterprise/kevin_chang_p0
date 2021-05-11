@@ -1,15 +1,22 @@
 /*
- * grant all privileges on all tables in schema recipeapi to swekevin;
+ * grant all privileges on all tables in schema recipeapi to postgres;
  * select current_user;
  */
+select current_user;
+grant all privileges on all tables in schema recipeapi to postgres;
+grant select, delete, insert, update on all tables in schema recipeapi to postgres;
+grant usage on schema recipeapi to postgres;
 
 show search_path;
 set search_path to recipeapi;
+
+/*
 drop table users cascade;
 drop table ingredients cascade;
 drop table recipes cascade;
 drop table user_favorite_recipes cascade;
 drop table recipe_ingredient_table cascade;
+*/
 
 CREATE TABLE users (
 	user_id serial NOT null constraint pk_user primary key,
@@ -20,9 +27,22 @@ CREATE TABLE users (
 	email varchar(255) unique NOT null
 );
 
+insert into users (user_id, first_name, last_name, username, "password", email)
+	values (1, 'Administrator', 'Administrator', 'admin_user', 'adminpassword', 'admin@company.net');
+
+select * from users where username = 'admin_user' and password = 'adminpassword';  
+
 select * from users;
-insert into users (first_name, last_name, username, "password", email)
-	values ('Administrator', 'Administrator', 'admin_user', 'adminpassword', 'admin@company.net');
+select * from ingredients;
+select * from recipes;
+select * from recipe_ingredient_table;
+
+
+delete from users;
+delete from ingredients;
+delete from recipes;
+delete from recipe_ingredient_table;
+
 
 delete from users where first_name = 'Administrator';
 
@@ -60,8 +80,7 @@ CREATE TABLE user_favorite_recipes (
 	CONSTRAINT fk_favorite_recipe_id FOREIGN KEY (recipe_id) references recipes(recipe_id)
 );
 
-select * from users;
-select * from recipes;
-select * from ingredients;
-select * from recipe_ingredient_table;
+
+
+
 

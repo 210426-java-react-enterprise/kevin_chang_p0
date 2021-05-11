@@ -70,9 +70,6 @@ public class RegisterScreen extends Screen {
             System.out.print("Password: ");
             password = consoleReader.readLine();
 
-            System.out.print("Age: ");
-            age = Integer.parseInt(consoleReader.readLine());
-
             AppUser newUser = new AppUser(firstName, lastName, username, password, email);
             userService.register(newUser);
 

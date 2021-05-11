@@ -40,7 +40,7 @@ public class UserService {
     //TODO valid user input
     public boolean isUserValid(AppUser user) {
         //use regex to check valid username, password, email, first name, and last name
-        boolean check = false;
+        boolean check = true;
 
         if (user == null) return check;
         //Username regex borrowed from https://mkyong.com/regular-expressions/how-to-validate-username-with-regular-expression/
@@ -52,13 +52,29 @@ public class UserService {
 
         String regexName = "^[a-zA-z][a-zA-z,.'-]+$";
 
-        if(Pattern.matches(regexUsername, user.getUsername()) &&
-            Pattern.matches(regexPassword, user.getPassword()) &&
-            Pattern.matches(regexEmail, user.getEmail()) &&
-            Pattern.matches(regexName, user.getFirstName()) &&
-            Pattern.matches(regexName, user.getLastName())){
-            check = true;
+        //Builds a String that tells users where their inputs were incorrect
+        StringBuilder message = new StringBuilder();
+        if(!Pattern.matches(regexUsername, user.getUsername())){
+            message.append("Username input was not valid.\n");
+            check = false;
         }
+        if(Pattern.matches(regexPassword, user.getPassword())){
+            message.append("Password input was not valid.\n");
+            check = false;
+        }
+       if(Pattern.matches(regexEmail, user.getEmail())){
+            message.append("Email input was not valid.\n");
+            check = false;
+        }
+        if(Pattern.matches(regexName, user.getFirstName())){
+            message.append("First name input was not valid.\n");
+            check = false;
+        }
+        if(Pattern.matches(regexName, user.getLastName())){
+            message.append("Last name input was not valid.\n");
+            check = false;
+        }
+        System.out.println(message.toString());
 
         return check;
     }
@@ -66,12 +82,16 @@ public class UserService {
     //called by IngredientScreen to take in ArrayList of ingredients and initiate search process
     public boolean isIngredientValid(String ingredient){
         boolean check = false;
-        String regex = "^([a-zA-Z]+){3,40}$|^[0]$";
-
+        //String regex = "^([a-zA-Z+]+){3,40}$|^[0]$";
+        //accounts for in case the user puts in a space between words
+        String regex = "^([a-zA-Z]+[ ]?[a-zA-Z]?){3,40}$|^[0]$";
         if(Pattern.matches(regex, ingredient)){
             check = true;
         }
 
+        if(!check){
+            System.out.println("Ingredient input is invalid!");
+        }
         return check;
     }
 
