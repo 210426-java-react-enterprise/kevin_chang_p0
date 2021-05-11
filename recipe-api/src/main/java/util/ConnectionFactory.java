@@ -32,13 +32,17 @@ public class ConnectionFactory {
     private static ConnectionFactory connectionFactory;
     private Properties props = new Properties();
 
+    /* Unsure abotu the purpose of htis
     static {
         try {
-            Class.forName("org.postgresql.Drivers.Driver");
+            Class.forName("org.postgresql.drivers.Driver");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
+     */
+
+
 
     private ConnectionFactory() {
         try {

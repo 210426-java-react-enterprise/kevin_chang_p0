@@ -1,3 +1,5 @@
+package test;
+
 import org.junit.Assert;
 import org.junit.Test;
 import models.Recipe;
@@ -52,7 +54,7 @@ public class ArrayListTest {
 
         //Assert
         System.out.println("Recipe data: " + recipe.toString());
-        Assert.assertEquals(expectedString, recipe.toString());
+        Assert.assertEquals(expectedString, (recipe.getName() + " " + recipe.getUrl()));
 
     }
 
