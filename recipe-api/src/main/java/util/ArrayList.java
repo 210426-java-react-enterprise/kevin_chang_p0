@@ -55,8 +55,8 @@ public class ArrayList<T> implements List<T>{
         this.storageArray[size] = data;
         size++;
 
-        System.out.println((float)size/(float)REAL_SIZE);
-        System.out.println("Data added.");
+        //System.out.println((float)size/(float)REAL_SIZE);
+        //System.out.println("Data added.");
 
         if((float)size/(float)REAL_SIZE > 0.7){
             doubleStorageArray();
@@ -77,7 +77,7 @@ public class ArrayList<T> implements List<T>{
             }
         }
         REAL_SIZE = REAL_SIZE*2;
-        System.out.println(REAL_SIZE);
+        //System.out.println(REAL_SIZE);
         storageArray = tempStorageArray;
 
     }
@@ -86,7 +86,7 @@ public class ArrayList<T> implements List<T>{
      * Retrieves data at a certain index
      */
     public T get(int index){
-        System.out.println("Data was retrieved.");
+        //System.out.println("Data was retrieved.");
         return (T) this.storageArray[index];
 
     }

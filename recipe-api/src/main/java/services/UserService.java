@@ -43,10 +43,16 @@ public class UserService {
         boolean check = true;
 
         if (user == null) return check;
-        //Username regex borrowed from https://mkyong.com/regular-expressions/how-to-validate-username-with-regular-expression/
-        String regexUsername = " ^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){3,18}[a-zA-Z0-9]$";
-        //Password regex borrowed from https://www.geeksforgeeks.org/how-to-validate-a-password-using-regular-expressions-in-java/
-        String regexPassword = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&-+=()])(?=\\S+$).{8,40}$";
+        //Regex expression to check for usernames of length 3-20
+        String regexUsername = "^[a-zA-Z0-9]([a-zA-Z0-9._-]){1,18}[a-zA-Z0-9]$";
+
+        //Regex expression to check for passwords of length 8-40 with special characters
+        String regexPassword = "^[a-zA-Z0-9.!@?'#$%^&-+=;()+=^._-]{8,40}$";
+
+        //Commented version: Password regex borrowed from https://www.geeksforgeeks.org/how-to-validate-a-password-using-regular-expressions-in-java/
+        //String regexPassword = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&-+=()])(?=\\S+$).{8,40}$";
+
+
         //Email regex borrowed from Kyle Plummer
         String regexEmail = "^([0-9a-zA-Z.]+@[0-9a-zA-Z]+[.][a-zA-Z]+){1,40}$";
 
@@ -58,23 +64,23 @@ public class UserService {
             message.append("Username input was not valid.\n");
             check = false;
         }
-        if(Pattern.matches(regexPassword, user.getPassword())){
+        if(!Pattern.matches(regexPassword, user.getPassword())){
             message.append("Password input was not valid.\n");
             check = false;
         }
-       if(Pattern.matches(regexEmail, user.getEmail())){
+       if(!Pattern.matches(regexEmail, user.getEmail())){
             message.append("Email input was not valid.\n");
             check = false;
         }
-        if(Pattern.matches(regexName, user.getFirstName())){
+        if(!Pattern.matches(regexName, user.getFirstName())){
             message.append("First name input was not valid.\n");
             check = false;
         }
-        if(Pattern.matches(regexName, user.getLastName())){
+        if(!Pattern.matches(regexName, user.getLastName())){
             message.append("Last name input was not valid.\n");
             check = false;
         }
-        System.out.println(message.toString());
+        System.err.println(message.toString());
 
         return check;
     }
