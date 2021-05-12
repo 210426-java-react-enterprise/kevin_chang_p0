@@ -18,6 +18,7 @@ public class RegisterScreen extends Screen {
         super("RegisterScreen", "/register");
         this.consoleReader = consoleReader;
         this.userService = userService;
+        this.router = router;
     }
 
     public void render() {
@@ -27,7 +28,6 @@ public class RegisterScreen extends Screen {
         String email;
         String username;
         String password;
-        int age;
 
         // ok but a little verbose
 //        InputStreamReader inputStreamReader = new InputStreamReader(System.in);
@@ -82,6 +82,8 @@ public class RegisterScreen extends Screen {
         } catch (Exception e) {
             //e.printStackTrace(); // include this line while developing/debugging the app!
             // should be logged to a file in a production environment
+        }finally{
+            router.navigate("/welcome");
         }
 
 

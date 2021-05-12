@@ -47,4 +47,19 @@ public class AppState {
         this.appRunning = appRunning;
     }
 
+    public void startup() {
+        router.navigate("/welcome");
+        while (appRunning) {
+            try {
+                router.getCurrentScreen().render();
+            } catch (Exception e) {
+                shutdown();
+            }
+        }
+    }
+
+    public void shutdown() {
+        this.appRunning = false;
+    }
+
 }

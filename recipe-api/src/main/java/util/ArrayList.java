@@ -3,6 +3,7 @@ package util;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+
 public class ArrayList<T> implements List<T>{
 
     /**
@@ -85,6 +86,18 @@ public class ArrayList<T> implements List<T>{
 
     }
 
+    //when items get removed you'll need to refactor the array
+    private void refactorStorageArray(){
+        Object[] tempStorageArray = new Object[REAL_SIZE];
+        for (int i = 0; i < size; i++) {
+            if(storageArray[i] != null){
+                tempStorageArray[i] = storageArray[i];
+            }
+        }
+        storageArray = tempStorageArray;
+
+    }
+
     /**
      * Retrieves data at a certain index
      */
@@ -115,15 +128,29 @@ public class ArrayList<T> implements List<T>{
         return size;
     }
 
+    public boolean remove(T data){
+        boolean check = false;
+        for (int i = 0; i < size; i++) {
+            if(storageArray[i].equals(data)){
+                storageArray[i] = null;
+                size--;
+                check = true;
+            }
+        }
+        refactorStorageArray();
+        return check;
+    }
+
     @Override
     public Iterator<T> iterator() {
         return new Iterator<T>() {
 
-            Object[] arrayList = storageArray;
+            T[] arrayList = (T[])storageArray;
+            int index = 0;
 
             @Override
             public boolean hasNext() {
-                return arrayList.next() != null;
+                return size != 0;
             }
 
             @Override
@@ -134,6 +161,10 @@ public class ArrayList<T> implements List<T>{
                 if (!this.hasNext()) {
                     throw new NoSuchElementException();
                 }
+
+                data = arrayList[index];
+                index++;
+
 
                 return data;
             }

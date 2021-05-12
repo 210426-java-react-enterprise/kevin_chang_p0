@@ -68,11 +68,20 @@ public class LinkedList<T> implements List<T> {
 //        return null;
 //    }
 //
-//    // TODO: (Associate task) implement this method!
-//    @Override
-//    public T remove(T data) {
-//        return null;
-//    }
+    @Override
+    public boolean remove(T data) {
+        Node<T> runner = head;
+        for (int i = 0; i < size; i++) {
+            if (runner.data == data) {
+                runner.prevNode = runner.nextNode;
+                runner.nextNode.prevNode = runner.prevNode;
+                return true;
+            }
+            runner = runner.nextNode;
+        }
+
+        return false;
+    }
 
     // TODO: (Associate task) implement this method!
     //@Override

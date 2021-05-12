@@ -8,7 +8,7 @@ public interface Collection<T> extends Iterable<T> {
     int size();
     boolean contains(T data);
     void add(T data);
-    //T remove(T data);
+    boolean remove(T data);
 
     default Stream<T> stream() {
         return StreamSupport.stream(this.spliterator(), false);
