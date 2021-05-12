@@ -78,9 +78,9 @@ public class RegisterScreen extends Screen {
             //System.out.println("Navigating to welcome screen...");
 
         } catch (InvalidRequestException | ResourcePersistenceException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         } catch (Exception e) {
-            e.printStackTrace(); // include this line while developing/debugging the app!
+            //e.printStackTrace(); // include this line while developing/debugging the app!
             // should be logged to a file in a production environment
         }
 

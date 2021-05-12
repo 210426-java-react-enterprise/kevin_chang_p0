@@ -18,13 +18,13 @@ public class AppState {
         System.out.println("Initializing application...");
 
         appRunning = true;
-        consoleReader = new BufferedReader(new InputStreamReader(System.in));
 
+        consoleReader = new BufferedReader(new InputStreamReader(System.in));
         final UserDAO userDao = new UserDAO();
         final ExternalDAO externalDao = new ExternalDAO();
         final UserService userService = new UserService(userDao, externalDao);
-
         router = new ScreenRouter();
+
         router.addScreen(new WelcomeScreen(consoleReader, router))
                 .addScreen(new LoginScreen(consoleReader, router))
                 .addScreen(new RegisterScreen(consoleReader, userService, router))

@@ -5,14 +5,22 @@ import daos.UserDAO;
 import exceptions.InvalidRequestException;
 import exceptions.ResourcePersistenceException;
 import models.AppUser;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.regex.*;
 import models.Recipe;
 import util.ArrayList;
+import util.ConnectionFactory;
+
+import static screens.DashboardScreen.ANSI_RED;
+import static screens.DashboardScreen.ANSI_RESET;
 
 public class UserService {
 
     private UserDAO userDao;
     private ExternalDAO externalDao;
+
 
     public UserService(UserDAO userDao, ExternalDAO externalDao) {
 
@@ -20,22 +28,30 @@ public class UserService {
         this.externalDao = externalDao;
     }
 
+
     public AppUser register(AppUser newUser) throws InvalidRequestException, ResourcePersistenceException {
+        try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
+            if (!isUserValid(newUser)) {
+                throw new InvalidRequestException("Invalid new user data provided!");
+            }
 
-        if (!isUserValid(newUser)) {
-            throw new InvalidRequestException("Invalid new user data provided!");
-        }
+            if (!userDao.isUsernameAvailable(conn, newUser.getUsername())) {
+                System.out.println(ANSI_RED + "Username is not available!" + ANSI_RESET );
 
-        if (!userDao.isUsernameAvailable(newUser.getUsername())) {
-            throw new ResourcePersistenceException("The provided username is already taken!");
-        }
+                throw new ResourcePersistenceException("The provided username is already taken!");
+            }
 
-        if (!userDao.isEmailAvailable(newUser.getEmail())) {
-            throw new ResourcePersistenceException("The provided email is already taken!");
-        }
+            if (!userDao.isEmailAvailable(conn, newUser.getEmail())) {
+                System.out.println(ANSI_RED + "Email is not available!" + ANSI_RESET );
+                throw new ResourcePersistenceException("The provided email is already taken!");
+            }
 
-        return userDao.saveUser(newUser);
-
+                newUser = userDao.saveUser(conn, newUser);
+        } catch (
+    SQLException e) {
+        //e.printStackTrace();
+    }
+        return newUser;
     }
     //TODO valid user input
     public boolean isUserValid(AppUser user) {
