@@ -15,7 +15,7 @@ public interface List<T> {
 
     void add(T data);
     T get(int index);
-    boolean contains (T data);
+    //boolean contains (T data);
     int size();
 
     //interfaces can have methods with implementations

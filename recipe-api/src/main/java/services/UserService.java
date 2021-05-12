@@ -39,10 +39,10 @@ public class UserService {
     }
     //TODO valid user input
     public boolean isUserValid(AppUser user) {
-        //use regex to check valid username, password, email, first name, and last name
+
         boolean check = true;
 
-        if (user == null) return check;
+        if (user == null) return false;
         //Regex expression to check for usernames of length 3-20
         String regexUsername = "^[a-zA-Z0-9]([a-zA-Z0-9._-]){1,18}[a-zA-Z0-9]$";
 
@@ -52,8 +52,7 @@ public class UserService {
         //Commented version: Password regex borrowed from https://www.geeksforgeeks.org/how-to-validate-a-password-using-regular-expressions-in-java/
         //String regexPassword = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&-+=()])(?=\\S+$).{8,40}$";
 
-
-        //Email regex borrowed from Kyle Plummer
+        //Email regex courtesy of Kyle Plummer
         String regexEmail = "^([0-9a-zA-Z.]+@[0-9a-zA-Z]+[.][a-zA-Z]+){1,40}$";
 
         String regexName = "^[a-zA-z][a-zA-z,.'-]+$";
@@ -80,6 +79,7 @@ public class UserService {
             message.append("Last name input was not valid.\n");
             check = false;
         }
+
         System.err.println(message.toString());
 
         return check;
@@ -90,7 +90,7 @@ public class UserService {
         boolean check = false;
         //String regex = "^([a-zA-Z+]+){3,40}$|^[0]$";
         //accounts for in case the user puts in a space between words
-        String regex = "^([a-zA-Z]+[ ]?[a-zA-Z]?){3,40}$|^[0]$";
+        String regex = "^([a-zA-Z]+){3,40}$|^[0]$";
         if(Pattern.matches(regex, ingredient)){
             check = true;
         }
