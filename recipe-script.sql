@@ -10,13 +10,13 @@ grant usage on schema recipeapi to postgres;
 show search_path;
 set search_path to recipeapi;
 
-/*
+
 drop table users cascade;
 drop table ingredients cascade;
 drop table recipes cascade;
 drop table user_favorite_recipes cascade;
 drop table recipe_ingredient_table cascade;
-*/
+
 
 CREATE TABLE users (
 	user_id serial NOT null constraint pk_user primary key,

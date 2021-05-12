@@ -6,7 +6,7 @@ package util;
  *
  * @param <T>
  */
-public class LinkedList<T> implements List<T>, Queue<T> {
+public class LinkedList<T> implements List<T> {
 
     private int size;
     private Node<T> head;
@@ -37,7 +37,6 @@ public class LinkedList<T> implements List<T>, Queue<T> {
      *
      * @return
      */
-    @Override
     public T poll() {
 
         if (head == null) {
@@ -60,16 +59,10 @@ public class LinkedList<T> implements List<T>, Queue<T> {
     }
 
     // TODO: (Associate task) implement this method!
-    @Override
-    public T peek() {
-        return null;
-    }
-
-    // TODO: (Associate task) implement this method!
-    @Override
-    public T remove(T data) {
-        return null;
-    }
+    //@Override
+    //public T remove(T data) {
+    //    return null;
+    //}
 
     @Override
     public T get(int index) {
@@ -90,10 +83,10 @@ public class LinkedList<T> implements List<T>, Queue<T> {
     }
 
     // TODO: (Associate task) implement this method!
-    @Override
-    public boolean contains(T data) {
-        return false;
-    }
+    //@Override
+    //public boolean contains(T data) {
+    //    return false;
+    //}
 
     @Override
     public int size() {

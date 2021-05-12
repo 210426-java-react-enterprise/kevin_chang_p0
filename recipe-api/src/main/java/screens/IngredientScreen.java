@@ -42,8 +42,8 @@ public class IngredientScreen extends Screen {
         try {
             while(check){
                 System.out.print("Please input an ingredient or type \'0\' to Finish: ");
-                //trims out extra spaces of inputs and replaces spaces between ingredients with a '+'
-                ingredient = consoleReader.readLine().trim().replace(' ', '+');
+                //trims out extra spaces of inputs
+                ingredient = consoleReader.readLine().trim();
 
                 //adds to array only if the user did not enter 0
                 if(userService.isIngredientValid(ingredient) && !ingredient.trim().equals("0")){
@@ -57,9 +57,6 @@ public class IngredientScreen extends Screen {
                 }
             }
 
-            //Prompting that the flow is continuing
-            System.out.println("Saving ingredient data...");
-
             //returns user to Dashboard only if they enter 0 and have not put in anything into the array
             if(ingredient.equals("0") && ingredientArray.size() == 0){
                 //returns user to dashboard if they don't enter anything and enter 0
@@ -72,6 +69,8 @@ public class IngredientScreen extends Screen {
                 //all the ingredients are added, persist each ingredient into the database
                 //You will then draw from the database to render RecipeScreen
                 if(ingredientArray.size() != 0) {
+                    //Prompting that the flow is continuing
+                    System.out.println("Saving ingredient data...");
 
                     int[] ingredientIdArray = userDao.saveIngredients(ingredientArray);
 
