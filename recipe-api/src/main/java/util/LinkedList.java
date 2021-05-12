@@ -1,5 +1,8 @@
 package util;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 /**
  * A simple implementation of a doubly linked-list structure that
  * does not accept null data.
@@ -58,11 +61,34 @@ public class LinkedList<T> implements List<T> {
 
     }
 
+
+//    // TODO: (Associate task) implement this method!
+//    @Override
+//    public T peek() {
+//        return null;
+//    }
+//
+    @Override
+    public boolean remove(T data) {
+        Node<T> runner = head;
+        for (int i = 0; i < size; i++) {
+            if (runner.data == data) {
+                runner.prevNode = runner.nextNode;
+                runner.nextNode.prevNode = runner.prevNode;
+                return true;
+            }
+            runner = runner.nextNode;
+        }
+
+        return false;
+    }
+
     // TODO: (Associate task) implement this method!
     //@Override
     //public T remove(T data) {
     //    return null;
     //}
+
 
     @Override
     public T get(int index) {
@@ -82,11 +108,20 @@ public class LinkedList<T> implements List<T> {
         return null;
     }
 
-    // TODO: (Associate task) implement this method!
-    //@Override
-    //public boolean contains(T data) {
-    //    return false;
-    //}
+    @Override
+    public boolean contains(T data) {
+        Node<T> runner = head;
+        for (int i = 0; i < size; i++) {
+            if (runner.data == data) {
+                return true;
+            }
+            runner = runner.nextNode;
+        }
+
+        return false;
+    }
+
+
 
     @Override
     public int size() {
@@ -109,6 +144,34 @@ public class LinkedList<T> implements List<T> {
             this.prevNode = prevNode;
         }
 
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return new Iterator<T>() {
+
+            Node<T> current = head;
+
+            @Override
+            public boolean hasNext() {
+                return current != null;
+            }
+
+            @Override
+            public T next() {
+
+                T data = null;
+
+                if (!this.hasNext()) {
+                    throw new NoSuchElementException();
+                }
+
+                data = current.data;
+                current = current.nextNode;
+
+                return data;
+            }
+        };
     }
 
 }
