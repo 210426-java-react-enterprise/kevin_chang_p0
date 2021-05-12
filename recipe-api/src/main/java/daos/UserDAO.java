@@ -13,22 +13,22 @@ import java.sql.SQLException;
 public class UserDAO {
 
     //Returns an int[] array of ingredient_id's of the ingredients that were sent through the method
-    public int[] saveIngredients(ArrayList<String> ingredientArray){
+    public int[] saveIngredients(Connection conn, ArrayList<String> ingredientArray){
         //Stores the ingredient_id of every ingredient that has been added, or is duplicate, into this array
         //This array will be used to persist into the FK table
         int[] ingredientIDArray = new int[ingredientArray.size()];
 
-        try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
+        try {
             String sqlInsertIngredient = "insert into ingredients ( ingredient ) values (?)";
             PreparedStatement pstmt = conn.prepareStatement(sqlInsertIngredient, new String[] { "ingredient_id" });;
 
             for (int i = 0; i < ingredientArray.size(); i++) {
-                if(!isIngredientDuplicate(ingredientArray.get(i))){
+                if(!isIngredientDuplicate(conn, ingredientArray.get(i))){
                     pstmt.setString(1, ingredientArray.get(i));
                     pstmt.executeUpdate();
                 }
 
-                ingredientIDArray[i] = getIngredientId(ingredientArray.get(i));
+                ingredientIDArray[i] = getIngredientId(conn, ingredientArray.get(i));
             }
 
 
@@ -40,9 +40,9 @@ public class UserDAO {
         return ingredientIDArray;
     }
 
-    public int getIngredientId(String ingredient){
+    public int getIngredientId(Connection conn, String ingredient){
         int ingredient_id = 0;
-        try(Connection conn = ConnectionFactory.getInstance().getConnection()){
+        try{
             String sql = "select ingredient_id from ingredients where ingredient = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, ingredient);
@@ -53,16 +53,16 @@ public class UserDAO {
             }
 
         }catch(SQLException e){
-            e.printStackTrace();
+            //e.printStackTrace();
         }
 
 
         return ingredient_id;
     }
 
-    public boolean isIngredientDuplicate(String ingredient){
+    public boolean isIngredientDuplicate(Connection conn, String ingredient){
 
-        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+        try {
             String sqlQueryDuplicates = "select * from ingredients where ingredient = ?";
             PreparedStatement pstmt = conn.prepareStatement(sqlQueryDuplicates);
             pstmt.setString(1, ingredient);
@@ -73,7 +73,7 @@ public class UserDAO {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
 
         return false;
@@ -81,24 +81,24 @@ public class UserDAO {
     }
 
     //Returns an int[] array of recipe_id's of the recipes that were sent through the method
-    public int[] saveRecipes(ArrayList<Recipe> recipeArray){
+    public int[] saveRecipes(Connection conn, ArrayList<Recipe> recipeArray){
         //Stores the ingredient_id of every ingredient that has been added, or is duplicate, into this array
         //This array will be used to persist into the FK table
         int[] recipeIDArray = new int[recipeArray.size()];
 
-        try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
+        try {
             String sqlInsertRecipe = "insert into recipes ( recipe_name, recipe_url ) values (?, ?)";
             PreparedStatement pstmt = conn.prepareStatement(sqlInsertRecipe, new String[] { "recipe_id" });
 
             for (int i = 0; i < recipeArray.size(); i++) {
-                if(!isRecipeDuplicate(recipeArray.get(i).getName(), recipeArray.get(i).getUrl())){
+                if(!isRecipeDuplicate(conn, recipeArray.get(i).getName(), recipeArray.get(i).getUrl())){
                     pstmt.setString(1, recipeArray.get(i).getName());
                     pstmt.setString(2, recipeArray.get(i).getUrl());
                     pstmt.executeUpdate();
                 }
 
                 //gets the recipe_id from database so it can be stored
-                recipeIDArray[i] = getRecipeId(recipeArray.get(i).getName(), recipeArray.get(i).getUrl());
+                recipeIDArray[i] = getRecipeId(conn, recipeArray.get(i).getName(), recipeArray.get(i).getUrl());
             }
 
 
@@ -110,9 +110,9 @@ public class UserDAO {
         return recipeIDArray;
     }
 
-    public boolean isRecipeDuplicate(String name, String url){
+    public boolean isRecipeDuplicate(Connection conn, String name, String url){
 
-        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+        try {
             String sqlQueryDuplicates = "select * from recipes where recipe_name = ? and recipe_url = ? ";
             PreparedStatement pstmt = conn.prepareStatement(sqlQueryDuplicates);
             pstmt.setString(1, name);
@@ -124,16 +124,16 @@ public class UserDAO {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
 
         return false;
 
     }
 
-    public int getRecipeId(String name, String url){
+    public int getRecipeId(Connection conn, String name, String url){
         int recipe_id = 0;
-        try(Connection conn = ConnectionFactory.getInstance().getConnection()){
+        try {
             String sql = "select recipe_id from recipes where recipe_name = ? and recipe_url = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, name);
@@ -145,15 +145,15 @@ public class UserDAO {
             }
 
         }catch(SQLException e){
-            e.printStackTrace();
+            //e.printStackTrace();
         }
 
 
         return recipe_id;
     }
 
-    public void persistFKToRecipeIngredientTable(int[] recipeIdArray, int[] ingredientIdArray){
-        try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
+    public void persistFKToRecipeIngredientTable(Connection conn, int[] recipeIdArray, int[] ingredientIdArray){
+        try {
             String sql = "insert into recipe_ingredient_table (recipe_id, ingredient_id) values (?, ?)";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
@@ -163,20 +163,20 @@ public class UserDAO {
                     pstmt.setInt(2, ingredientIdArray[j]);
 
                     //checks to ensure that the key is not already in the table
-                    if(!isRecipeIngredientKeyDuplicate(recipeIdArray[i], ingredientIdArray[j])) {
+                    if(!isRecipeIngredientKeyDuplicate(conn, recipeIdArray[i], ingredientIdArray[j])) {
                         pstmt.executeUpdate();
                     }
                 }
             }
 
         }catch(SQLException e){
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
-    public boolean isRecipeIngredientKeyDuplicate(int recipe_id, int ingredient_id){
+    public boolean isRecipeIngredientKeyDuplicate(Connection conn, int recipe_id, int ingredient_id){
 
-        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+        try {
             String sqlQueryDuplicates = "select * from recipe_ingredient_table where recipe_id = ? and ingredient_id = ? ";
             PreparedStatement pstmt = conn.prepareStatement(sqlQueryDuplicates);
             pstmt.setInt(1, recipe_id);
@@ -188,26 +188,25 @@ public class UserDAO {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
 
         return false;
 
     }
 
-    public AppUser saveUser(AppUser newUser) {
+    public AppUser saveUser(Connection conn, AppUser newUser) {
 
         //the connection is constructed as a Singleton of the ConnectionFactory class, in a static context
         //Connection exists and is accessed only through the Class
-        try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
-
+        try {
             String sqlInsertUser = "insert into users ( first_name , last_name, username , password , email ) values (?,?,?,?,?)";
-            PreparedStatement pstmt = conn.prepareStatement(sqlInsertUser, new String[] { "user_id" });
-            pstmt.setString(1,newUser.getFirstName());
-            pstmt.setString(2,newUser.getLastName());
-            pstmt.setString(3,newUser.getUsername());
-            pstmt.setString(4,newUser.getPassword());
-            pstmt.setString(5,newUser.getEmail());
+            PreparedStatement pstmt = conn.prepareStatement(sqlInsertUser, new String[]{"user_id"});
+            pstmt.setString(1, newUser.getFirstName());
+            pstmt.setString(2, newUser.getLastName());
+            pstmt.setString(3, newUser.getUsername());
+            pstmt.setString(4, newUser.getPassword());
+            pstmt.setString(5, newUser.getEmail());
 
             int rowsInserted = pstmt.executeUpdate();
 
@@ -217,16 +216,16 @@ public class UserDAO {
                     newUser.setUser_id(rs.getInt("user_id"));
                 }
             }
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch(SQLException e){
+            //e.printStackTrace();
         }
+
 
         return newUser;
     }
 
-    public boolean  isUsernameAvailable(String username) {
-        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+    public boolean  isUsernameAvailable(Connection conn, String username) {
+        try {
 
             String sql = "select * from users where username = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -238,15 +237,15 @@ public class UserDAO {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
 
         return true;
 
     }
 
-    public boolean isEmailAvailable(String email) {
-        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+    public boolean isEmailAvailable(Connection conn, String email) {
+        try {
 
             String sql = "select * from users where email = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -258,7 +257,7 @@ public class UserDAO {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
 
         return true;
@@ -287,7 +286,7 @@ public class UserDAO {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
 
         return user;

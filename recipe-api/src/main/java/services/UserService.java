@@ -5,14 +5,22 @@ import daos.UserDAO;
 import exceptions.InvalidRequestException;
 import exceptions.ResourcePersistenceException;
 import models.AppUser;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.regex.*;
 import models.Recipe;
 import util.ArrayList;
+import util.ConnectionFactory;
+
+import static screens.DashboardScreen.ANSI_RED;
+import static screens.DashboardScreen.ANSI_RESET;
 
 public class UserService {
 
     private UserDAO userDao;
     private ExternalDAO externalDao;
+
 
     public UserService(UserDAO userDao, ExternalDAO externalDao) {
 
@@ -20,29 +28,37 @@ public class UserService {
         this.externalDao = externalDao;
     }
 
+
     public AppUser register(AppUser newUser) throws InvalidRequestException, ResourcePersistenceException {
+        try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
+            if (!isUserValid(newUser)) {
+                throw new InvalidRequestException("Invalid new user data provided!");
+            }
 
-        if (!isUserValid(newUser)) {
-            throw new InvalidRequestException("Invalid new user data provided!");
-        }
+            if (!userDao.isUsernameAvailable(conn, newUser.getUsername())) {
+                System.out.println(ANSI_RED + "Username is not available!" + ANSI_RESET );
 
-        if (!userDao.isUsernameAvailable(newUser.getUsername())) {
-            throw new ResourcePersistenceException("The provided username is already taken!");
-        }
+                throw new ResourcePersistenceException("The provided username is already taken!");
+            }
 
-        if (!userDao.isEmailAvailable(newUser.getEmail())) {
-            throw new ResourcePersistenceException("The provided email is already taken!");
-        }
+            if (!userDao.isEmailAvailable(conn, newUser.getEmail())) {
+                System.out.println(ANSI_RED + "Email is not available!" + ANSI_RESET );
+                throw new ResourcePersistenceException("The provided email is already taken!");
+            }
 
-        return userDao.saveUser(newUser);
-
+                newUser = userDao.saveUser(conn, newUser);
+        } catch (
+    SQLException e) {
+        //e.printStackTrace();
+    }
+        return newUser;
     }
     //TODO valid user input
     public boolean isUserValid(AppUser user) {
-        //use regex to check valid username, password, email, first name, and last name
+
         boolean check = true;
 
-        if (user == null) return check;
+        if (user == null) return false;
         //Regex expression to check for usernames of length 3-20
         String regexUsername = "^[a-zA-Z0-9]([a-zA-Z0-9._-]){1,18}[a-zA-Z0-9]$";
 
@@ -52,8 +68,7 @@ public class UserService {
         //Commented version: Password regex borrowed from https://www.geeksforgeeks.org/how-to-validate-a-password-using-regular-expressions-in-java/
         //String regexPassword = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&-+=()])(?=\\S+$).{8,40}$";
 
-
-        //Email regex borrowed from Kyle Plummer
+        //Email regex courtesy of Kyle Plummer
         String regexEmail = "^([0-9a-zA-Z.]+@[0-9a-zA-Z]+[.][a-zA-Z]+){1,40}$";
 
         String regexName = "^[a-zA-z][a-zA-z,.'-]+$";
@@ -80,6 +95,7 @@ public class UserService {
             message.append("Last name input was not valid.\n");
             check = false;
         }
+
         System.err.println(message.toString());
 
         return check;
@@ -90,7 +106,7 @@ public class UserService {
         boolean check = false;
         //String regex = "^([a-zA-Z+]+){3,40}$|^[0]$";
         //accounts for in case the user puts in a space between words
-        String regex = "^([a-zA-Z]+[ ]?[a-zA-Z]?){3,40}$|^[0]$";
+        String regex = "^([a-zA-Z]+){3,40}$|^[0]$";
         if(Pattern.matches(regex, ingredient)){
             check = true;
         }

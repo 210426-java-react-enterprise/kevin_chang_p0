@@ -6,10 +6,13 @@ import drivers.Driver;
 import models.Recipe;
 import services.UserService;
 import util.ArrayList;
+import util.ConnectionFactory;
 import util.ScreenRouter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class IngredientScreen extends Screen {
 
@@ -42,8 +45,8 @@ public class IngredientScreen extends Screen {
         try {
             while(check){
                 System.out.print("Please input an ingredient or type \'0\' to Finish: ");
-                //trims out extra spaces of inputs and replaces spaces between ingredients with a '+'
-                ingredient = consoleReader.readLine().trim().replace(' ', '+');
+                //trims out extra spaces of inputs
+                ingredient = consoleReader.readLine().trim();
 
                 //adds to array only if the user did not enter 0
                 if(userService.isIngredientValid(ingredient) && !ingredient.trim().equals("0")){
@@ -57,9 +60,6 @@ public class IngredientScreen extends Screen {
                 }
             }
 
-            //Prompting that the flow is continuing
-            System.out.println("Saving ingredient data...");
-
             //returns user to Dashboard only if they enter 0 and have not put in anything into the array
             if(ingredient.equals("0") && ingredientArray.size() == 0){
                 //returns user to dashboard if they don't enter anything and enter 0
@@ -72,17 +72,22 @@ public class IngredientScreen extends Screen {
                 //all the ingredients are added, persist each ingredient into the database
                 //You will then draw from the database to render RecipeScreen
                 if(ingredientArray.size() != 0) {
+                    //Prompting that the flow is continuing
+                    System.out.println("Saving ingredient data...");
+                    try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
+                        int[] ingredientIdArray = userDao.saveIngredients(conn, ingredientArray);
 
-                    int[] ingredientIdArray = userDao.saveIngredients(ingredientArray);
+                        System.out.println("Searching for recipes...");
+                        ArrayList<Recipe> recipeArray = externalDao.searchRecipe(ingredientArray);
+                        if (recipeArray != null) {
+                            int[] recipeIdArray = userDao.saveRecipes(conn, recipeArray);
 
-                    System.out.println("Searching for recipes...");
-                    ArrayList<Recipe> recipeArray = externalDao.searchRecipe(ingredientArray);
-                    if(recipeArray != null){
-                        int[] recipeIdArray = userDao.saveRecipes(recipeArray);
+                            //Use the int[] arrays returned at this point to construct and persist to relational table: recipe_ingredient_table
+                            userDao.persistFKToRecipeIngredientTable(conn, recipeIdArray, ingredientIdArray);
 
-                        //Use the int[] arrays returned at this point to construct and persist to relational table: recipe_ingredient_table
-                        userDao.persistFKToRecipeIngredientTable(recipeIdArray, ingredientIdArray);
-
+                        }
+                    } catch(SQLException e){
+                        //e.printStackTrace();
                     }
                 }
             System.out.println("All data has been saved. Recipe search complete!");
@@ -91,7 +96,7 @@ public class IngredientScreen extends Screen {
             Driver.app().setAppRunning(false);
 
             } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
 
 

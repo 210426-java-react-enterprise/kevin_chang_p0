@@ -61,6 +61,7 @@ public class LinkedList<T> implements List<T> {
 
     }
 
+
 //    // TODO: (Associate task) implement this method!
 //    @Override
 //    public T peek() {
@@ -72,6 +73,13 @@ public class LinkedList<T> implements List<T> {
 //    public T remove(T data) {
 //        return null;
 //    }
+
+    // TODO: (Associate task) implement this method!
+    //@Override
+    //public T remove(T data) {
+    //    return null;
+    //}
+
 
     @Override
     public T get(int index) {
@@ -91,11 +99,20 @@ public class LinkedList<T> implements List<T> {
         return null;
     }
 
-    // TODO: (Associate task) implement this method!
     @Override
     public boolean contains(T data) {
+        Node<T> runner = head;
+        for (int i = 0; i < size; i++) {
+            if (runner.data == data) {
+                return true;
+            }
+            runner = runner.nextNode;
+        }
+
         return false;
     }
+
+
 
     @Override
     public int size() {

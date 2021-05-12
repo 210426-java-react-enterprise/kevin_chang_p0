@@ -58,5 +58,47 @@ public class ArrayListTest {
 
     }
 
+    @Test
+    public void test_ArrayListZeroCapacityConstructor(){
+        //Arrange
+        ArrayList<String> sut = new ArrayList<>(0);
+
+        int expectedSize = 0;
+
+        //Act
+
+        //Assert
+        Assert.assertEquals(expectedSize, (sut.size()));
+
+    }
+
+    @Test
+    public void test_ArrayListContains(){
+        //Arrange
+        ArrayList<String> stringSut = new ArrayList<>();
+        //Act
+        stringSut.add("hello world");
+        stringSut.add("bye world");
+        stringSut.add("good friend");
+        stringSut.add("bad friend");
+        stringSut.add("null value");
+
+        //Act
+
+        //Assert
+        Assert.assertEquals(true, stringSut.contains("hello world"));
+        Assert.assertEquals(true, stringSut.contains("null value"));
+        Assert.assertEquals(false, stringSut.contains("incorrect"));
+
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void test_ArrayListInvalidCapacity(){
+        //Arrange
+        ArrayList<String> sut = new ArrayList<>(-1);
+
+
+    }
+
 
 }

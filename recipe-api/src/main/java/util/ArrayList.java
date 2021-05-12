@@ -1,5 +1,8 @@
 package util;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T>{
 
     /**
@@ -112,14 +115,32 @@ public class ArrayList<T> implements List<T>{
         return size;
     }
 
+    @Override
+    public Iterator<T> iterator() {
+        return new Iterator<T>() {
 
+            Object[] arrayList = storageArray;
 
+            @Override
+            public boolean hasNext() {
+                return arrayList.next() != null;
+            }
 
-    public static void main(String[] args) {
-        ArrayList<String> stringArrayList = new ArrayList<>();
-        stringArrayList.add("hello world");
-        System.out.println(stringArrayList.get(0));
-        System.out.println(stringArrayList.contains("hello world"));
-        System.out.println(stringArrayList.size());
+            @Override
+            public T next() {
+
+                T data = null;
+
+                if (!this.hasNext()) {
+                    throw new NoSuchElementException();
+                }
+
+                return data;
+            }
+        };
     }
+
+
+
+
 }
