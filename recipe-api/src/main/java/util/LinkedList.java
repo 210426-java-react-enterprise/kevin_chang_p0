@@ -1,12 +1,15 @@
 package util;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 /**
  * A simple implementation of a doubly linked-list structure that
  * does not accept null data.
  *
  * @param <T>
  */
-public class LinkedList<T> implements List<T>, Queue<T> {
+public class LinkedList<T> implements List<T> {
 
     private int size;
     private Node<T> head;
@@ -37,7 +40,6 @@ public class LinkedList<T> implements List<T>, Queue<T> {
      *
      * @return
      */
-    @Override
     public T poll() {
 
         if (head == null) {
@@ -59,17 +61,17 @@ public class LinkedList<T> implements List<T>, Queue<T> {
 
     }
 
-    // TODO: (Associate task) implement this method!
-    @Override
-    public T peek() {
-        return null;
-    }
-
-    // TODO: (Associate task) implement this method!
-    @Override
-    public T remove(T data) {
-        return null;
-    }
+//    // TODO: (Associate task) implement this method!
+//    @Override
+//    public T peek() {
+//        return null;
+//    }
+//
+//    // TODO: (Associate task) implement this method!
+//    @Override
+//    public T remove(T data) {
+//        return null;
+//    }
 
     @Override
     public T get(int index) {
@@ -116,6 +118,34 @@ public class LinkedList<T> implements List<T>, Queue<T> {
             this.prevNode = prevNode;
         }
 
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return new Iterator<T>() {
+
+            Node<T> current = head;
+
+            @Override
+            public boolean hasNext() {
+                return current != null;
+            }
+
+            @Override
+            public T next() {
+
+                T data = null;
+
+                if (!this.hasNext()) {
+                    throw new NoSuchElementException();
+                }
+
+                data = current.data;
+                current = current.nextNode;
+
+                return data;
+            }
+        };
     }
 
 }
