@@ -10,22 +10,16 @@ grant usage on schema recipeapi to postgres;
 show search_path;
 set search_path to recipeapi;
 
-
-drop table users cascade;
+/*
 drop table ingredients cascade;
 drop table recipes cascade;
 drop table user_favorite_recipes cascade;
+drop table user_favorite_recipes cascade;
 drop table recipe_ingredient_table cascade;
+drop table users cascade;
+*/
 
 
-CREATE TABLE users (
-	user_id serial NOT null constraint pk_user primary key,
-	first_name varchar(25) NOT NULL,
-	last_name varchar(25) NOT NULL,
-	username varchar(20) unique NOT null,
-	"password" varchar(255) NOT NULL,
-	email varchar(255) unique NOT null
-);
 
 insert into users (user_id, first_name, last_name, username, "password", email)
 	values (1, 'Administrator', 'Administrator', 'admin_user', 'adminpassword', 'admin@company.net');
@@ -54,9 +48,16 @@ inner join recipe_ingredient_table rit on recipes.recipe_id = rit.recipe_id
 inner join ingredients on  rit.ingredient_id = ingredients.ingredient_id;
 	
 
-
-
 delete from users where first_name = 'Administrator';
+
+CREATE TABLE users (
+	user_id serial NOT null constraint pk_user primary key,
+	first_name varchar(25) NOT NULL,
+	last_name varchar(25) NOT NULL,
+	username varchar(20) unique NOT null,
+	"password" varchar(255) NOT NULL,
+	email varchar(255) unique NOT null
+);
 
 CREATE TABLE recipes (
 	recipe_id serial NOT NULL,
