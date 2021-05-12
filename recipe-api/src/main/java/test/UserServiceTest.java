@@ -131,16 +131,16 @@ public class UserServiceTest {
     @Test
     public void test_registerValidUserUsernamePassword(){
         //Arrange
-        when(mockUserDao.isUsernameAvailable(anyString())).thenReturn(true);
-        when(mockUserDao.isEmailAvailable(anyString())).thenReturn(true);
+        when(mockUserDao.isUsernameAvailable(any(), anyString())).thenReturn(true);
+        when(mockUserDao.isEmailAvailable(any(), anyString())).thenReturn(true);
 
         //Act
         sut.register(new AppUser("Avi", "Goodman","avigoodman","password123", "avi.goodman@revature.net"));
 
         //Assert
-        verify(mockUserDao, times(1)).isUsernameAvailable(anyString());
-        verify(mockUserDao, times(1)).isEmailAvailable(anyString());
-        verify(mockUserDao, times(1)).saveUser(any());
+        verify(mockUserDao, times(1)).isUsernameAvailable(any(), anyString());
+        verify(mockUserDao, times(1)).isEmailAvailable(any(), anyString());
+        verify(mockUserDao, times(1)).saveUser(any(), any());
     }
 
     @Test

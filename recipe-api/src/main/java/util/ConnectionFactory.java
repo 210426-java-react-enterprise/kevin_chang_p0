@@ -32,7 +32,7 @@ public class ConnectionFactory {
         try {
             props.load(new FileReader("src/main/resources/application.properties"));
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
@@ -56,7 +56,7 @@ public class ConnectionFactory {
                     props.getProperty("password"));
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
 
         return conn;

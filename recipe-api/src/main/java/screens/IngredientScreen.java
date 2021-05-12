@@ -6,10 +6,13 @@ import drivers.Driver;
 import models.Recipe;
 import services.UserService;
 import util.ArrayList;
+import util.ConnectionFactory;
 import util.ScreenRouter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class IngredientScreen extends Screen {
 
@@ -71,17 +74,20 @@ public class IngredientScreen extends Screen {
                 if(ingredientArray.size() != 0) {
                     //Prompting that the flow is continuing
                     System.out.println("Saving ingredient data...");
+                    try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
+                        int[] ingredientIdArray = userDao.saveIngredients(conn, ingredientArray);
 
-                    int[] ingredientIdArray = userDao.saveIngredients(ingredientArray);
+                        System.out.println("Searching for recipes...");
+                        ArrayList<Recipe> recipeArray = externalDao.searchRecipe(ingredientArray);
+                        if (recipeArray != null) {
+                            int[] recipeIdArray = userDao.saveRecipes(conn, recipeArray);
 
-                    System.out.println("Searching for recipes...");
-                    ArrayList<Recipe> recipeArray = externalDao.searchRecipe(ingredientArray);
-                    if(recipeArray != null){
-                        int[] recipeIdArray = userDao.saveRecipes(recipeArray);
+                            //Use the int[] arrays returned at this point to construct and persist to relational table: recipe_ingredient_table
+                            userDao.persistFKToRecipeIngredientTable(conn, recipeIdArray, ingredientIdArray);
 
-                        //Use the int[] arrays returned at this point to construct and persist to relational table: recipe_ingredient_table
-                        userDao.persistFKToRecipeIngredientTable(recipeIdArray, ingredientIdArray);
-
+                        }
+                    } catch(SQLException e){
+                        //e.printStackTrace();
                     }
                 }
             System.out.println("All data has been saved. Recipe search complete!");
@@ -90,7 +96,7 @@ public class IngredientScreen extends Screen {
             Driver.app().setAppRunning(false);
 
             } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
 
 

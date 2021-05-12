@@ -27,7 +27,7 @@ public class ExternalDAO {
 		try {
 			outputStream = getOutputStream(concatIng(ingredientArray), "cf6cdd39", "3b7b32c4423d117221766aec8e28e20f");
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 
 		return getRecipe(outputStream);
@@ -97,11 +97,11 @@ public class ExternalDAO {
 			read();
 		
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		
 		return recipeArray;
@@ -135,7 +135,7 @@ public class ExternalDAO {
 			getJSONToRecipeArray();
 			
 		} catch (IOException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 //		finally {System.out.println(JSONString);}
 

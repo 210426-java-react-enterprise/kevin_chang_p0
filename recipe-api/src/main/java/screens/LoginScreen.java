@@ -53,7 +53,7 @@ public class LoginScreen extends Screen {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 }
