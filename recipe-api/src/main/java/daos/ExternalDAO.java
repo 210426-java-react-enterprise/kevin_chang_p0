@@ -37,7 +37,8 @@ public class ExternalDAO {
 	//Takes an ArrayList<String> input and concatenates them with "+" signs in between
 	public String concatIng(ArrayList<String> ing) {
 		if (ing.size() > 0) {
-			String result = ing.get(0);
+			//in the event that a string has spaces between two words, it'll replace them with a "+" between them as well
+			String result = ing.get(0).replace(' ', '+');
 			for(int i = 1; i < ing.size(); i++) {
 				result = result + "+" + ing.get(i);
 			}

@@ -106,7 +106,7 @@ public class UserService {
         boolean check = false;
         //String regex = "^([a-zA-Z+]+){3,40}$|^[0]$";
         //accounts for in case the user puts in a space between words
-        String regex = "^([a-zA-Z]+){3,40}$|^[0]$";
+        String regex = "^([a-zA-Z]+[ ]?[a-zA-Z]?){3,40}$|^[0]$";
         if(Pattern.matches(regex, ingredient)){
             check = true;
         }
