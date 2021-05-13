@@ -14,7 +14,6 @@ public class AppUser {
     }
 
     public AppUser(String firstName, String lastName, String username, String password, String email) {
-        System.out.println("AppUser constructor invoked!");
         this.username = username;
         this.password = password;
         this.email = email;

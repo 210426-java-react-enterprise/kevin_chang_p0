@@ -1,6 +1,9 @@
 
 import org.junit.*;
+import util.ArrayList;
 import util.LinkedList;
+
+import java.util.NoSuchElementException;
 
 public class LinkedListTest {
 
@@ -118,18 +121,76 @@ public class LinkedListTest {
 //    public void test_peekWithPopulatedList() {
 //
 //    }
-//
-//    // TODO: (Associate task) implement this method!
-//    @Test
-//    public void test_containsWithEmptyList() {
-//
-//    }
-//
-//    // TODO: (Associate task) implement this method!
-//    @Test
-//    public void test_containsWithPopulatedList() {
-//
-//    }
+
+
+    @Test
+    public void test_containsWithEmptyList() {
+        //Arrange
+        LinkedList<String> sut = new LinkedList<>();
+
+        //Assert
+        Assert.assertFalse(sut.contains("any String"));
+    }
+
+
+    @Test
+    public void test_containsWithPopulatedList() {
+//Arrange
+        LinkedList<String> sut = new LinkedList<>();
+        sut.add("hello");
+        sut.add("world");
+        sut.add("i am");
+        sut.add("kevin");
+
+        //Assert
+        Assert.assertTrue(sut.contains("i am"));
+        Assert.assertFalse(sut.contains("nothing"));
+    }
+
+    @Test
+    public void test_removeWithExistingData(){
+        //Arrange
+        LinkedList<String> sut = new LinkedList<>();
+        sut.add("hello");
+        sut.add("world");
+        sut.add("bye");
+        sut.add("earth");
+
+        //Assert
+        Assert.assertTrue(sut.remove("world"));
+    }
+
+    @Test
+    public void test_removeWithNonExistingData(){
+        //Arrange
+        LinkedList<String> sut = new LinkedList<>();
+        sut.add("hello");
+        sut.add("world");
+
+        //Assert
+        Assert.assertFalse(sut.remove("non existent"));
+    }
+
+    @Test
+    public void test_iteratorHasNextWithFilledList(){
+        LinkedList<String> sut = new LinkedList<>();
+        sut.add("hello");
+        sut.add("my");
+        sut.add("beautiful");
+        sut.add("world");
+
+        String expectedString = "hello";
+
+        Assert.assertTrue(sut.iterator().hasNext());
+        Assert.assertEquals(expectedString, sut.iterator().next());
+
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void test_iteratorNextWithEmptyList(){
+        LinkedList<String> sut = new LinkedList<>();
+        sut.iterator().next();
+    }
 
 
 

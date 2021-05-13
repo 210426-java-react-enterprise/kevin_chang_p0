@@ -72,9 +72,12 @@ public class LinkedList<T> implements List<T> {
     public boolean remove(T data) {
         Node<T> runner = head;
         for (int i = 0; i < size; i++) {
-            if (runner.data == data) {
+            if (runner.data.equals(data)) {
                 runner.prevNode = runner.nextNode;
-                runner.nextNode.prevNode = runner.prevNode;
+                if(runner != tail) {
+                    runner.nextNode.prevNode = runner.prevNode;
+                }
+                size--;
                 return true;
             }
             runner = runner.nextNode;

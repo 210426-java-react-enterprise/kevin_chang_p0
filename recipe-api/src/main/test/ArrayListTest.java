@@ -4,6 +4,8 @@ import org.junit.Test;
 import models.Recipe;
 import util.ArrayList;
 
+import java.util.NoSuchElementException;
+
 public class ArrayListTest {
 
 
@@ -118,6 +120,28 @@ public class ArrayListTest {
         Assert.assertEquals(expectedSize, sut.size());
         Assert.assertEquals(expectedString, sut.get(2));
     }
+
+    @Test
+    public void test_iteratorHasNextWithFilledList(){
+        ArrayList<String> sut = new ArrayList<>();
+        sut.add("hello");
+        sut.add("my");
+        sut.add("beautiful");
+        sut.add("world");
+
+        String expectedString = "hello";
+
+        Assert.assertTrue(sut.iterator().hasNext());
+        Assert.assertEquals(expectedString, sut.iterator().next());
+
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void test_iteratorNextWithEmptyList(){
+        ArrayList<String> sut = new ArrayList<>();
+        sut.iterator().next();
+    }
+
 
 
 }

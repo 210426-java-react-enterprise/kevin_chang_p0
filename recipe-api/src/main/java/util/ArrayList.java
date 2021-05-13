@@ -89,9 +89,14 @@ public class ArrayList<T> implements List<T>{
     //when items get removed you'll need to refactor the array
     public void refactorStorageArray(){
         Object[] tempStorageArray = new Object[REAL_SIZE];
-        for (int i = 0; i < size; i++) {
+        int forIndex = size;
+        int tempIndex = 0;
+
+
+        for (int i = 0; i < forIndex; i++) {
             if(storageArray[i] != null){
-                tempStorageArray[i] = storageArray[i];
+                tempStorageArray[tempIndex] = storageArray[i];
+                tempIndex++;
             }
             else{
                 size--;
