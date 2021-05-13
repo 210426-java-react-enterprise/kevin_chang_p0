@@ -1,4 +1,3 @@
-package test;
 
 import daos.ExternalDAO;
 import daos.UserDAO;
@@ -163,8 +162,6 @@ public class UserServiceTest {
         //Assert
         assertFalse(sut.isIngredientValid("chicken1"));
         assertFalse(sut.isIngredientValid("?chicken"));
-        assertFalse(sut.isIngredientValid("chicken "));
-        assertFalse(sut.isIngredientValid("chicken d"));
         assertFalse(sut.isIngredientValid("chicken!"));
         assertFalse(sut.isIngredientValid("chic.ken"));
 

@@ -1,4 +1,3 @@
-package test;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -98,6 +97,26 @@ public class ArrayListTest {
         ArrayList<String> sut = new ArrayList<>(-1);
 
 
+    }
+
+    @Test
+    public void test_refactorStorageArrayWithNullValueInTheMiddle(){
+        //Arrange
+        ArrayList<String> sut = new ArrayList<>();
+        sut.add("hello");
+        sut.add("my");
+        sut.add("beautiful");
+        sut.add("world");
+
+        int expectedSize = 3;
+        String expectedString = "world";
+
+        //Act
+        sut.remove("beautiful");
+
+        //Assert
+        Assert.assertEquals(expectedSize, sut.size());
+        Assert.assertEquals(expectedString, sut.get(2));
     }
 
 

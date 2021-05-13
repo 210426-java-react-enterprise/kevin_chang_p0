@@ -1,4 +1,3 @@
-package test;
 
 import util.ConnectionFactory;
 import org.junit.Assert;
