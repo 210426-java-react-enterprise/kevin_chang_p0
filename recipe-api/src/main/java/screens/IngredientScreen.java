@@ -79,18 +79,25 @@ public class IngredientScreen extends Screen {
 
                         System.out.println("Searching for recipes...");
                         ArrayList<Recipe> recipeArray = externalDao.searchRecipe(ingredientArray);
+
                         if (recipeArray != null) {
+
                             int[] recipeIdArray = userDao.saveRecipes(conn, recipeArray);
 
                             //Use the int[] arrays returned at this point to construct and persist to relational table: recipe_ingredient_table
                             userDao.persistFKToRecipeIngredientTable(conn, recipeIdArray, ingredientIdArray);
+
+                            //TODO for some reason executing this for loop before persisting recipes breaks persistence
+                            for(Recipe recipe:recipeArray){
+                                System.out.println(recipe.getName());
+                                System.out.println(recipe.getUrl());
+                            }
 
                         }
                     } catch(SQLException e){
                         //e.printStackTrace();
                     }
                 }
-            System.out.println("All data has been saved. Recipe search complete!");
 
            //Shut down the application
             Driver.app().setAppRunning(false);
