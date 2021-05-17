@@ -10,14 +10,13 @@ grant usage on schema recipeapi to postgres;
 show search_path;
 set search_path to recipeapi;
 
-/*
+
 drop table ingredients cascade;
 drop table recipes cascade;
 drop table user_favorite_recipes cascade;
-drop table user_favorite_recipes cascade;
 drop table recipe_ingredient_table cascade;
 drop table users cascade;
-*/
+
 
 
 
@@ -93,7 +92,4 @@ CREATE TABLE user_favorite_recipes (
 	CONSTRAINT fk_favorite_recipe_id FOREIGN KEY (recipe_id) references recipes(recipe_id)
 );
 
-
-
-
-
+commit;
